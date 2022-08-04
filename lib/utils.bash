@@ -38,18 +38,18 @@ download_release() {
   version="$1"
   filename="$2"
 
-  if [ "$(uname)" == "Darwin" ];then
+  if [ "$(uname)" == "Darwin" ]; then
     HOST_OS="darwin"
-  elif [ "$(uname)" == "Linux" ];then
+  elif [ "$(uname)" == "Linux" ]; then
     HOST_OS="linux"
   else
     echo "Support Darwin/Linux OS only"
     exit 1
   fi
 
-  if [ "$(uname -m)" == "amd64" ] || [ "$(uname -m)" == "x86_64" ];then
+  if [ "$(uname -m)" == "amd64" ] || [ "$(uname -m)" == "x86_64" ]; then
     HOST_ARCH="amd64"
-  elif [ "$(uname -m)" == "arm64" ];then
+  elif [ "$(uname -m)" == "arm64" ]; then
     HOST_ARCH="arm64"
   else
     echo "Support amd64/arm64 CPU arch only"
