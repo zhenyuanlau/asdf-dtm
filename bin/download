@@ -14,6 +14,3 @@ release_file="$ASDF_DOWNLOAD_PATH/$TOOL_NAME"
 
 # Download file to the download directory
 download_release "$ASDF_INSTALL_VERSION" "$release_file"
-
-# Remove the file since we don't need to keep it
-rm "$release_file"
