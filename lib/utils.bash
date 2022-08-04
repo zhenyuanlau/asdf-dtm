@@ -2,8 +2,7 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for dtm.
-GH_REPO="asdf-dtm"
+GH_REPO="https://github.com/devstream-io/devstream.git"
 TOOL_NAME="dtm"
 TOOL_TEST="dtm --help"
 
@@ -31,8 +30,6 @@ list_github_tags() {
 }
 
 list_all_versions() {
-  # TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-  # Change this function if dtm has other means of determining installable versions.
   list_github_tags
 }
 
@@ -41,8 +38,27 @@ download_release() {
   version="$1"
   filename="$2"
 
-  # TODO: Adapt the release URL convention for dtm
-  url="$GH_REPO/archive/v${version}.tar.gz"
+  if [ "$(uname)" == "Darwin" ];then
+    HOST_OS="darwin"
+  elif [ "$(uname)" == "Linux" ];then
+    HOST_OS="linux"
+  else
+    echo "Support Darwin/Linux OS only"
+    exit 1
+  fi
+
+  if [ "$(uname -m)" == "amd64" ] || [ "$(uname -m)" == "x86_64" ];then
+    HOST_ARCH="amd64"
+  elif [ "$(uname -m)" == "arm64" ];then
+    HOST_ARCH="arm64"
+  else
+    echo "Support amd64/arm64 CPU arch only"
+    exit 1
+  fi
+
+  echo "Got OS type: ${HOST_OS} and CPU arch: ${HOST_ARCH}"
+
+  url="https://devstream.gateway.scarf.sh/releases/v${version}/dtm-$HOST_OS-$HOST_ARCH"
 
   echo "* Downloading $TOOL_NAME release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -61,7 +77,7 @@ install_version() {
     mkdir -p "$install_path"
     cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
-    # TODO: Assert dtm executable exists.
+    chmod +x "$install_path/$TOOL_NAME"
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
     test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
