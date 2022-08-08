@@ -11,12 +11,7 @@ fail() {
   exit 1
 }
 
-curl_opts=(-fsSL)
-
-# NOTE: You might want to remove this if dtm is not hosted on GitHub releases.
-if [ -n "${GITHUB_API_TOKEN:-}" ]; then
-  curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
-fi
+curl_opts=(-L)
 
 sort_versions() {
   sed 'h; s/[+-]/./g; s/.p\([[:digit:]]\)/.z\1/; s/$/.z/; G; s/\n/ /' |
